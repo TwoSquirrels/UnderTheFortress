@@ -115,9 +115,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Entity\Player.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\Shared.cpp" />
+    <ClCompile Include="Source\UtFScenes.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -330,8 +331,9 @@
     <Xml Include="App\example\xml\test.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Entity\Player.hpp" />
     <ClInclude Include="Source\Game.hpp" />
-    <ClInclude Include="Source\Shared.hpp" />
+    <ClInclude Include="Source\UtFScenes.hpp" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

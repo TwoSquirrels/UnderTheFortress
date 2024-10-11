@@ -1,4 +1,10 @@
-﻿# include "Shared.hpp"
+﻿# include "UtFScenes.hpp"
+
+# include "Entity/Player.hpp"
+
+using namespace std;
+
+// Shared
 
 const String Shared::title = U"Under the Fortress";
 const String Shared::version = U"0.1.0";
@@ -15,3 +21,91 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 )" }.trim(),
 };
+
+// Field scene
+
+Field::Field(const InitData& init) : IScene(init)
+{
+	if (not getData().world.entities.empty()) return;
+	getData().world.entities << make_shared<Player>();
+}
+
+void Field::update()
+{
+	getData().world.update();
+
+}
+
+void Field::draw() const
+{
+	getData().world.draw();
+}
+
+// Title scene
+
+Title::Title(const InitData& init) : IScene(init)
+{
+}
+
+void Title::update()
+{
+}
+
+void Title::draw() const
+{
+}
+
+// Menu scene
+
+Menu::Menu(const InitData& init) : IScene(init)
+{
+}
+
+void Menu::update()
+{
+}
+
+void Menu::draw() const
+{
+}
+
+// Story scene
+
+Story::Story(const InitData& init) : IScene(init)
+{
+}
+
+void Story::update()
+{
+}
+
+void Story::draw() const
+{
+}
+
+// Credit scene
+
+Credit::Credit(const InitData& init) : IScene(init)
+{
+}
+
+void Credit::update()
+{
+}
+
+void Credit::draw() const
+{
+}
+
+// UtFObject
+
+void initScenes(UtFScenes &scenes)
+{
+	scenes.add<Title>(U"title");
+	scenes.add<Field>(U"field");
+	scenes.add<Menu>(U"menu");
+	scenes.add<Story>(U"story");
+	scenes.add<Credit>(U"credit");
+
+	scenes.init(U"field");
+}

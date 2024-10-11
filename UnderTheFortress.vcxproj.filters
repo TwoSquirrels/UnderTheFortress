@@ -144,10 +144,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shared.cpp">
+    <ClCompile Include="Source\UtFScenes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Entity\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -818,10 +821,13 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Shared.hpp">
+    <ClInclude Include="Source\UtFScenes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Entity\Player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
