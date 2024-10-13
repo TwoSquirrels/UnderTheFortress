@@ -7,10 +7,16 @@
 class Player final : public LivingEntity
 {
 public:
-	explicit Player(const Vec3& pos = Vec3::Zero());
+	double maxSpeed;
+	double friction;
 
-	int32 getUpdatePriority() const override;
+	explicit Player(const Vec3& pos = Vec3{ 0.0, 0.0, 1.0 });
+
+	[[nodiscard]] String getName() const override;
+	[[nodiscard]] int32 getUpdatePriority() const override;
 	void update() override;
-	int32 getDrawZ() const override;
+	[[nodiscard]] int32 getDrawZ() const override;
 	void draw() const override;
+
+	friend void Formatter(FormatData& formatData, const Player& value);
 };

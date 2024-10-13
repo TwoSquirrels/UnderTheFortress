@@ -6,9 +6,9 @@
 
 struct Shared final
 {
-	static const String title;
-	static const String version;
-	static const LicenseInfo license;
+	static const String Title;
+	static const String Version;
+	static const LicenseInfo License;
 
 	World world;
 };
@@ -55,4 +55,4 @@ public:
 	void draw() const override;
 };
 
-void initScenes(UtFScenes& scenes);
+void InitScenes(UtFScenes& scenes);

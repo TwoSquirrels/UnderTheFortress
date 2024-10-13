@@ -6,10 +6,10 @@ using namespace std;
 
 // Shared
 
-const String Shared::title = U"Under the Fortress";
-const String Shared::version = U"0.1.0";
-const LicenseInfo Shared::license = {
-	.title = Shared::title,
+const String Shared::Title = U"Under the Fortress";
+const String Shared::Version = U"0.1.0";
+const LicenseInfo Shared::License = {
+	.title = Shared::Title,
 	.copyright = U"Copyright (c) 2024 TwoSquirrels",
 	.text = String{ UR"(
 
@@ -37,18 +37,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Field::Field(const InitData& init) : IScene(init)
 {
-	if (not getData().world.entities.empty()) return;
-	getData().world.entities << make_shared<Player>();
+	if (not getData().world.objects.empty()) return;
+	getData().world.tileMap.resize(32, 32);
+	for (int32 y : step(32))
+	{
+		for (int32 x : step(32))
+		{
+			getData().world.initCell({ x, y });
+		}
+	}
+	getData().world.tileMap[0][0][0].type = TileType::EnergyBlock;
+	getData().world.tileMap[1][1][1].type = TileType::GlassBlock;
+	getData().world.tileMap[2][2][2].type = TileType::StoneBlock;
+	getData().world.tileMap[3][3][3].type = TileType::WoodWall;
+	getData().world.objects << make_shared<Player>();
 }
 
 void Field::update()
 {
 	getData().world.update();
-
 }
 
 void Field::draw() const
 {
+	const Transformer2D scaled{ Mat3x2::Scale(32), TransformCursor::Yes };
 	getData().world.draw();
 }
 
@@ -110,7 +122,7 @@ void Credit::draw() const
 
 // UtFObject
 
-void initScenes(UtFScenes &scenes)
+void InitScenes(UtFScenes &scenes)
 {
 	scenes.add<Title>(U"title");
 	scenes.add<Field>(U"field");

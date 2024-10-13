@@ -1,5 +1,6 @@
 ﻿# include "UtFScenes.hpp"
 # include "Game.hpp"
+# include "Debug.ipp"
 
 # include <Siv3D.hpp>
 
@@ -7,7 +8,7 @@ using namespace std;
 
 void Main()
 {
-	LicenseManager::SetApplicationLicense(Shared::title, Shared::license);
+	LicenseManager::SetApplicationLicense(Shared::Title, Shared::License);
 
 	Window::SetMinimumFrameBufferSize(Size{ 256, 144 });
 	Window::Resize(1280, 720);
@@ -16,12 +17,13 @@ void Main()
 	Window::Resize(640, 360);
 	//Window::SetFullscreen(true);
 
-	Window::SetTitle(U"{} v{}"_fmt(Shared::title, Shared::version));
+	Window::SetTitle(U"{} v{}"_fmt(Shared::Title, Shared::Version));
 
 	Scene::SetBackground(Palette::Black);
+	Scene::SetLetterbox(Debug::Enabled ? Palette::Red : Palette::Black);
 
 	UtFScenes scenes;
-	initScenes(scenes);
+	InitScenes(scenes);
 
 	while (System::Update() && scenes.update())
 	{
