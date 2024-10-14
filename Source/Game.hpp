@@ -8,6 +8,7 @@
 
 enum class TileType : uint8
 {
+	Error = 0,
 	Air,
 	EnergyBlock,
 	GlassBlock,
@@ -96,6 +97,7 @@ public:
 	Array<std::shared_ptr<UtFObject>> objects;
 
 	void initCell(Point pos);
+	void load(const String& worldName);
 
 	void update(const UtFInput& input);
 	void draw(double accumulatorStep) const;

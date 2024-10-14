@@ -38,18 +38,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Field::Field(const InitData& init) : IScene(init), stepSec(1.0 / 60.0), m_accumulatorSec(0.0)
 {
 	if (not getData().world.objects.empty()) return;
-	getData().world.tileMap.resize(32, 32);
-	for (int32 y : step(32))
-	{
-		for (int32 x : step(32))
-		{
-			getData().world.initCell({ x, y });
-		}
-	}
-	getData().world.tileMap[0][0][0].type = TileType::EnergyBlock;
-	getData().world.tileMap[1][1][1].type = TileType::GlassBlock;
-	getData().world.tileMap[2][2][2].type = TileType::StoneBlock;
-	getData().world.tileMap[3][3][3].type = TileType::WoodWall;
+
+	getData().world.load(U"fortress");
 	getData().world.objects << make_shared<Player>();
 }
 

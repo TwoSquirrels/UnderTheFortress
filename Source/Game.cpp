@@ -18,6 +18,8 @@ MapTile::MapTile(const uint8 layer, const Vec2& tilePos, const TileType type)
 {
 	switch (type)
 	{
+	case TileType::Error:
+		break;
 	case TileType::Air:
 		break;
 	case TileType::EnergyBlock:
@@ -40,7 +42,7 @@ MapTile::MapTile(const uint8 layer, const Vec2& tilePos, const TileType type)
 void Formatter(FormatData& formatData, const MapTile& value)
 {
 	formatData.string +=
-		U"<MapTile layer={} tilePos={} typeId={} isSolid={} opacity={}, data={}>"_fmt(
+		U"<MapTile layer={} tilePos={} typeId={} isSolid={} opacity={} data={}>"_fmt(
 			value.layer, value.tilePos, FromEnum(value.type), value.isSolid, value.opacity,
 			value.data ? Format(*value.data) : U"null"
 		);
@@ -106,6 +108,37 @@ void World::initCell(const Point pos)
 	for (const auto layer : step(MapTile::LayerCount))
 	{
 		tileMap[pos][layer] = MapTile{ layer, pos };
+	}
+}
+
+void World::load(const String& worldName)
+{
+	const JSON world = JSON::Load(Resource(U"UnderTheFortress/worlds/{}.json"_fmt(worldName)), AllowExceptions::Yes);
+	const JSON worldMap = world[U"map"];
+	tileMap.resize(world[U"size"][1].get<size_t>(), world[U"size"][0].get<size_t>());
+
+	for (const auto y : step(tileMap.height()))
+	{
+		for (const auto x : step(tileMap.width()))
+		{
+			Array<TileType> tileTypes;
+			if (y < worldMap.size() && x < worldMap[y].size())
+			{
+				const String cellStr = worldMap[y][x].getString();
+				tileTypes = Array<char32>{ cellStr.begin(), cellStr.end() }.chunk(2).map(
+					[](const Array<char32>& chunk)
+					{
+						return ToEnum<TileType>(ParseIntOpt<uint8>(
+							String{ chunk.begin(), chunk.end() }, Arg::radix = 16
+						).value_or(0));
+					});
+			}
+	
+			for (const auto layer : step(MapTile::LayerCount))
+			{
+				tileMap[y][x][layer] = MapTile{ layer, { x, y }, tileTypes.fetch(layer, TileType::Air) };
+			}
+		}
 	}
 }
 

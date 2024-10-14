@@ -780,6 +780,7 @@
     <None Include=".gitignore" />
     <None Include="README.md" />
     <None Include="LICENSE" />
+    <None Include="App\UnderTheFortress\worlds\fortress.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="App\example\test.mp3">
