@@ -14,9 +14,9 @@ public:
 
 	[[nodiscard]] String getName() const override;
 	[[nodiscard]] int32 getUpdatePriority() const override;
-	void update() override;
+	void update(const UtFInput& input) override;
 	[[nodiscard]] int32 getDrawZ() const override;
-	void draw() const override;
+	void draw(double accumulatorStep) const override;
 
 	friend void Formatter(FormatData& formatData, const Player& value);
 };

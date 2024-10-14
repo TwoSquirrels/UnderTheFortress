@@ -1,6 +1,7 @@
 ﻿# pragma once
 
 # include "Game.hpp"
+# include "UtFInput.hpp"
 
 # include <Siv3D.hpp>
 
@@ -26,9 +27,15 @@ public:
 class Field final : public UtFScenes::Scene
 {
 public:
+	UtFInput input;
+	double stepSec;
+
 	explicit Field(const InitData& init);
 	void update() override;
 	void draw() const override;
+
+private:
+	double m_accumulatorSec;
 };
 
 class Menu final : public UtFScenes::Scene

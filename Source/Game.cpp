@@ -51,9 +51,9 @@ void Formatter(FormatData& formatData, const MapTile& value)
 UtFObject::~UtFObject() = default;
 String UtFObject::getName() const { return U"UtFObject"; }
 int32 UtFObject::getUpdatePriority() const { return 0; }
-void UtFObject::update() {}
+void UtFObject::update(const UtFInput&) {}
 int32 UtFObject::getDrawZ() const { return 0; }
-void UtFObject::draw() const {}
+void UtFObject::draw(double) const {};
 
 void Formatter(FormatData& formatData, const UtFObject& value)
 {
@@ -109,16 +109,16 @@ void World::initCell(const Point pos)
 	}
 }
 
-void World::update()
+void World::update(const UtFInput& input)
 {
-	DEBUG_PRINT_F3(U"World::update()");
+	if (input.down(KeyF3)) DEBUG_PRINT(U"World::update()");
 
 	objects
 		.stable_sorted_by([](const auto& a, const auto& b) { return a->getUpdatePriority() < b->getUpdatePriority(); })
-		.each([](const auto& object) { object->update(); });
+		.each([&input](const auto& object) { object->update(input); });
 }
 
-void World::draw() const
+void World::draw(const double accumulatorStep) const
 {
 	DEBUG_PRINT_F3(U"World::draw()");
 
@@ -132,7 +132,7 @@ void World::draw() const
 		for (; objectIter != sortedObjects.end() && (*objectIter)->getDrawZ() >= static_cast<int32>(layer); ++objectIter)
 		{
 			DEBUG_DUMP_F3((*objectIter)->getDrawZ());
-			(*objectIter)->draw();
+			(*objectIter)->draw(accumulatorStep);
 		}
 
 		// tile
@@ -154,6 +154,6 @@ void World::draw() const
 	for (; objectIter != sortedObjects.end(); ++objectIter)
 	{
 		DEBUG_DUMP_F3((*objectIter)->getDrawZ());
-		(*objectIter)->draw();
+		(*objectIter)->draw(accumulatorStep);
 	}
 }

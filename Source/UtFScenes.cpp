@@ -35,7 +35,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Field scene
 
-Field::Field(const InitData& init) : IScene(init)
+Field::Field(const InitData& init) : IScene(init), stepSec(1.0 / 60.0), m_accumulatorSec(0.0)
 {
 	if (not getData().world.objects.empty()) return;
 	getData().world.tileMap.resize(32, 32);
@@ -55,13 +55,18 @@ Field::Field(const InitData& init) : IScene(init)
 
 void Field::update()
 {
-	getData().world.update();
+	input.update();
+	for (m_accumulatorSec += Scene::DeltaTime(); m_accumulatorSec >= stepSec; m_accumulatorSec -= stepSec)	// NOLINT(cert-flp30-c)
+	{
+		getData().world.update(input);
+		input.reset();
+	}
 }
 
 void Field::draw() const
 {
 	const Transformer2D scaled{ Mat3x2::Scale(32), TransformCursor::Yes };
-	getData().world.draw();
+	getData().world.draw(m_accumulatorSec / stepSec);
 }
 
 // Title scene

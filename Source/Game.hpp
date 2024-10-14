@@ -1,5 +1,7 @@
 ﻿# pragma once
 
+# include "UtFInput.hpp"
+
 # include <Siv3D.hpp>
 
 // tile
@@ -21,7 +23,7 @@ public:
 	friend void Formatter(FormatData& formatData, const TileData& value);
 };
 
-class MapTile
+class MapTile final
 {
 public:
 	static constexpr uint8 LayerCount = 5;
@@ -49,11 +51,11 @@ public:
 
 	[[nodiscard]] virtual int32 getUpdatePriority() const; // lower value is higher priority
 
-	virtual void update();
+	virtual void update(const UtFInput& input);
 
 	[[nodiscard]] virtual int32 getDrawZ() const; // lower value is drawn first
 
-	virtual void draw() const;
+	virtual void draw(double accumulatorStep) const;
 
 	friend void Formatter(FormatData& formatData, const UtFObject& value);
 };
@@ -95,6 +97,6 @@ public:
 
 	void initCell(Point pos);
 
-	void update();
-	void draw() const;
+	void update(const UtFInput& input);
+	void draw(double accumulatorStep) const;
 };
