@@ -127,6 +127,18 @@ Resource(engine/soundfont/GMGSx.sf2.zstdcmp)
 //
 //////////////////////////////////////////////////////
 
+//
+//	Tiles
+//
+Resource(UnderTheFortress/tiles/glass.png)
+
+//
+//	Objects
+//
+
+//
+//	Worlds
+//
 Resource(UnderTheFortress/worlds/fortress.json)
 
 /* examples 

@@ -11,7 +11,7 @@ struct Shared final
 	static const String Version;
 	static const LicenseInfo License;
 
-	World world;
+	Optional<World> world;
 };
 
 using UtFScenes = SceneManager<String, Shared>;
@@ -62,4 +62,6 @@ public:
 	void draw() const override;
 };
 
+/// @brief Initialize the scenes.
+/// @param scenes The scene manager
 void InitScenes(UtFScenes& scenes);
