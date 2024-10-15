@@ -115,9 +115,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Assets.cpp" />
     <ClCompile Include="Source\Entity\Player.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\TileMap.cpp" />
     <ClCompile Include="Source\UtFInput.cpp" />
     <ClCompile Include="Source\UtFScenes.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -333,9 +335,11 @@
     <Xml Include="App\example\xml\test.xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Assets.hpp" />
     <ClInclude Include="Source\Debug.ipp" />
     <ClInclude Include="Source\Entity\Player.hpp" />
     <ClInclude Include="Source\Game.hpp" />
+    <ClInclude Include="Source\TileMap.hpp" />
     <ClInclude Include="Source\UtFInput.hpp" />
     <ClInclude Include="Source\UtFScenes.hpp" />
     <ClInclude Include="stdafx.h" />

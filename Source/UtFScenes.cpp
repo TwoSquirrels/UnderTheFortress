@@ -37,10 +37,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 Field::Field(const InitData& init) : IScene(init), stepSec(1.0 / 60.0), m_accumulatorSec(0.0)
 {
-	if (not getData().world.objects.empty()) return;
+	if (getData().world) return;
 
-	getData().world.load(U"fortress");
-	getData().world.objects << make_shared<Player>();
+	getData().world = World{ U"fortress" };
+	getData().world->objects << make_shared<Player>();
 }
 
 void Field::update()
@@ -48,7 +48,7 @@ void Field::update()
 	input.update();
 	for (m_accumulatorSec += Scene::DeltaTime(); m_accumulatorSec >= stepSec; m_accumulatorSec -= stepSec)	// NOLINT(cert-flp30-c)
 	{
-		getData().world.update(input);
+		getData().world->update(input);
 		input.reset();
 	}
 }
@@ -56,7 +56,7 @@ void Field::update()
 void Field::draw() const
 {
 	const Transformer2D scaled{ Mat3x2::Scale(32), TransformCursor::Yes };
-	getData().world.draw(m_accumulatorSec / stepSec);
+	getData().world->draw(m_accumulatorSec / stepSec);
 }
 
 // Title scene

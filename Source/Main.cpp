@@ -1,4 +1,5 @@
-﻿# include "UtFScenes.hpp"
+﻿# include "Assets.hpp"
+# include "UtFScenes.hpp"
 # include "Game.hpp"
 # include "Debug.ipp"
 
@@ -24,6 +25,8 @@ void Main()
 
 	UtFScenes scenes;
 	InitScenes(scenes);
+
+	Assets::Register();
 
 	while (System::Update() && scenes.update())
 	{

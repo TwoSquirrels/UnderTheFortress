@@ -4,14 +4,14 @@
 
 using namespace std;
 
-Player::Player(const Vec3& pos)
-	: LivingEntity(pos, 3), maxSpeed(0.125), friction(0.25)
+Player::Player(const Vec3& pos, const double maxStamina)
+	: LivingEntity(pos, 3), walkSpeed(0.125), dashSpeed(0.25), friction(0.25), stamina(maxStamina), maxStamina(maxStamina)
 {
 }
 
-String Player::getName() const
+ObjectType Player::type() const
 {
-	return U"Player";
+	return ObjectType::Player;
 }
 
 int32 Player::getUpdatePriority() const
@@ -24,13 +24,12 @@ void Player::update(const UtFInput& input)
 	if (input.down(KeyF3)) DEBUG_PRINT(U"Player::update()");
 
 	// input movement
-	maxSpeed = input.pressed(KeyShift) ? 0.25 : 0.125;
 	Vec3 force = Vec3::Zero();
 	if (input.pressed(KeyW | KeyUp)) force.y -= 1;
 	if (input.pressed(KeyS | KeyDown)) force.y += 1;
 	if (input.pressed(KeyA | KeyLeft)) force.x -= 1;
 	if (input.pressed(KeyD | KeyRight)) force.x += 1;
-	acc += force.normalized() * maxSpeed * friction;
+	acc += force.normalized() * (input.pressed(KeyShift) ? dashSpeed : walkSpeed) * friction;
 
 	// friction
 	acc += vel * -friction;
@@ -55,10 +54,10 @@ void Player::draw(const double accumulatorStep) const
 void Formatter(FormatData& formatData, const Player& value)
 {
 	formatData.string +=
-		U"<Player updatePriority={} drawZ={} pos={} vel={} acc={} hp={} maxHp={} maxSpeed={} friction={}>"_fmt(
+		U"<Player updatePriority={} drawZ={} pos={} vel={} acc={} hp={} maxHp={} walkSpeed={} dashSpeed={} friction={} stamina={}>"_fmt(
 			value.getUpdatePriority(), value.getDrawZ(),
 			value.pos, value.vel, value.acc,
 			value.hp, value.maxHp,
-			value.maxSpeed, value.friction
+			value.walkSpeed, value.dashSpeed, value.friction, value.stamina
 		);
 }
