@@ -1,60 +1,38 @@
 ﻿# pragma once
 
+# include "TileMap.hpp"
 # include "UtFInput.hpp"
 
 # include <Siv3D.hpp>
 
-// tile
-
-enum class TileType : uint8
-{
-	Error = 0,
-	Air,
-	EnergyBlock,
-	GlassBlock,
-	StoneBlock,
-	WoodWall,
-};
-
-class TileData
-{
-public:
-	virtual ~TileData();
-
-	friend void Formatter(FormatData& formatData, const TileData& value);
-};
-
-class MapTile final
-{
-public:
-	static constexpr uint8 LayerCount = 5;
-
-	uint8 layer;
-	Vec2 tilePos;
-	TileType type;
-	bool isSolid;
-	double opacity;
-	std::unique_ptr<TileData> data;
-
-	explicit MapTile(uint8 layer = 1, const Vec2& tilePos = Vec2::Zero(), TileType type = TileType::Air);
-
-	friend void Formatter(FormatData& formatData, const MapTile& value);
-};
-
 // object
 
-class UtFObject
+enum class ObjectType : uint8
+{
+	Error = 0,
+	Player = 1,
+};
+
+StringView ToId(ObjectType type);
+
+Optional<ObjectType> ToObjectType(StringView id);
+
+void Formatter(FormatData& formatData, ObjectType value);
+
+class UtFObject	// NOLINT(cppcoreguidelines-special-member-functions)
 {
 public:
-	virtual ~UtFObject();
+	virtual ~UtFObject() = default;
 
-	[[nodiscard]] virtual String getName() const;
+	[[nodiscard]] virtual ObjectType type() const = 0;
 
-	[[nodiscard]] virtual int32 getUpdatePriority() const; // lower value is higher priority
+	/// @remark lower value is higher priority
+	[[nodiscard]] virtual int32 getUpdatePriority() const;
 
 	virtual void update(const UtFInput& input);
 
-	[[nodiscard]] virtual int32 getDrawZ() const; // lower value is drawn first
+	/// @remark lower value is drawn first
+	[[nodiscard]] virtual int32 getDrawZ() const;
 
 	virtual void draw(double accumulatorStep) const;
 
@@ -70,8 +48,8 @@ public:
 
 	explicit Entity(const Vec3& pos = Vec3::Zero());
 
-	[[nodiscard]] String getName() const override;
-
+	/// @brief Move the entity.
+	/// @param resetAcc whether to reset acceleration after moving
 	void move(bool resetAcc = true);
 };
 
@@ -83,8 +61,6 @@ public:
 
 	explicit LivingEntity(const Vec3& pos = Vec3::Zero(), int64 maxHp = 1);
 
-	[[nodiscard]] String getName() const override;
-
 	bool damage(int64 amount, const String& reason = U"unknown");
 };
 
@@ -93,11 +69,10 @@ public:
 class World final
 {
 public:
-	Grid<std::array<MapTile, MapTile::LayerCount>> tileMap;
+	TileMap tileMap;
 	Array<std::shared_ptr<UtFObject>> objects;
 
-	void initCell(Point pos);
-	void load(const String& worldName);
+	explicit World(const String& worldName);
 
 	void update(const UtFInput& input);
 	void draw(double accumulatorStep) const;

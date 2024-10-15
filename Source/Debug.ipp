@@ -15,7 +15,9 @@ namespace Debug
 	{
 		if constexpr (not Enabled) return false;
 		if (not always && not KeyF3.down()) return false;
-		s3d::Print << U"{} ({})\t[DEBUG] {}"_fmt(DateTime::Now().format(U"HH:mm:ss.SS"), Scene::FrameCount(), Format(value));
+		const String log = U"{} ({})\t[DEBUG] {}"_fmt(DateTime::Now().format(U"HH:mm:ss.SS"), Scene::FrameCount(), Format(value));
+		Logger << log;
+		s3d::Print << log;
 		return true;
 	}
 
@@ -29,7 +31,7 @@ namespace Debug
 #   define DEBUG_DETAIL_LOG(FMT, ...) \
 	(Debug::Log(s3d::Unicode::Widen(__FILE__), (__LINE__), s3d::detail::FormatHelper{ (FMT) }(__VA_ARGS__)))
 # else
-#    define DEBUG_DETAIL_LOG(FMT, ...) ((FMT), (__VA_ARGS__), false)
+#    define DEBUG_DETAIL_LOG(FMT, ...) ((FMT), __VA_ARGS__, false)
 # endif
 
 /// @brief print the formatted string to the screen only in debug mode

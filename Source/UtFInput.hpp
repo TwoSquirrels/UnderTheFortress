@@ -5,8 +5,12 @@
 class UtFInput
 {
 public:
+	/// @brief Add the input state.
+	/// @remark This function should be called at the beginning of the Siv3D update.
 	void update();
 
+	/// @brief Reset the input state.
+	/// @remark This function should be called at the end of the game update.
 	void reset();
 
 	[[nodiscard]] bool pressed(uint32 key) const;
