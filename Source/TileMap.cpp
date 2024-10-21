@@ -124,6 +124,7 @@ void Tile::draw() const
 
 	// fallback
 	RectF{ getTilePos(), 1.0 }.drawFrame(0.125, 0.0, Palette::Magenta);
+	DEBUG_PRINT_F3(U"{} could not be drawn!", Format(*this));
 }
 
 void Formatter(FormatData& formatData, const Tile& value)
@@ -166,17 +167,31 @@ TileMap::TileMap(const Size size, const JSON& worldMap, const uint32 cellUpdateL
 		{
 			Array<TileType> tileTypes;
 
-			// if cell exists, parse it and fill tileTypes
-			if (y < worldMap.size() && x < worldMap[y].size())
+			try {
+				// if cell exists, parse it and fill tileTypes
+				if (y < worldMap.size() && x < worldMap[y].size())
+				{
+					const String cellStr = worldMap[y][x].getString();
+					tileTypes = Array<char32>{ cellStr.begin(), cellStr.end() }.chunk(2).map(
+						[](const Array<char32>& chunk)
+						{
+							return ToEnum<TileType>(ParseIntOpt<uint8>(
+								String{ chunk.begin(), chunk.end() }, Arg::radix = 16
+							).value_or(0));
+						});
+				}
+			}
+			catch (const Error& error)
 			{
-				const String cellStr = worldMap[y][x].getString();
-				tileTypes = Array<char32>{ cellStr.begin(), cellStr.end() }.chunk(2).map(
-					[](const Array<char32>& chunk)
-					{
-						return ToEnum<TileType>(ParseIntOpt<uint8>(
-							String{ chunk.begin(), chunk.end() }, Arg::radix = 16
-						).value_or(0));
-					});
+				DEBUG_PRINT(U"the cell (x={} y={}) could not be parsed: {}", x, y, error.what());
+			}
+			catch (const exception& exception)
+			{
+				DEBUG_PRINT(U"the cell (x={} y={}) could not be parsed: {}", x, y, Unicode::Widen(exception.what()));
+			}
+			catch (...)
+			{
+				DEBUG_PRINT(U"the cell (x={} y={}) could not be parsed!", x, y);
 			}
 
 			for (const auto layer : step(Tile::LayerCount))

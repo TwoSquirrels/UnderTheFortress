@@ -4,8 +4,9 @@
 
 using namespace std;
 
-Player::Player(const Vec3& pos, const double maxStamina)
-	: LivingEntity(pos, 3), walkSpeed(0.125), dashSpeed(0.25), friction(0.25), stamina(maxStamina), maxStamina(maxStamina)
+Player::Player(const Vec3& pos, const bool operable, const double maxStamina)
+	: LivingEntity(pos, 3), walkSpeed(0.125), dashSpeed(0.25), friction(0.25),
+	stamina(maxStamina), maxStamina(maxStamina), operable(operable)
 {
 }
 
@@ -24,12 +25,15 @@ void Player::update(const UtFInput& input)
 	if (input.down(KeyF3)) DEBUG_PRINT(U"Player::update()");
 
 	// input movement
-	Vec3 force = Vec3::Zero();
-	if (input.pressed(KeyW | KeyUp)) force.y -= 1;
-	if (input.pressed(KeyS | KeyDown)) force.y += 1;
-	if (input.pressed(KeyA | KeyLeft)) force.x -= 1;
-	if (input.pressed(KeyD | KeyRight)) force.x += 1;
-	acc += force.normalized() * (input.pressed(KeyShift) ? dashSpeed : walkSpeed) * friction;
+	if (operable)
+	{
+		Vec3 force = Vec3::Zero();
+		if (input.pressed(KeyW | KeyUp)) force.y -= 1;
+		if (input.pressed(KeyS | KeyDown)) force.y += 1;
+		if (input.pressed(KeyA | KeyLeft)) force.x -= 1;
+		if (input.pressed(KeyD | KeyRight)) force.x += 1;
+		acc += force.normalized() * (input.pressed(KeyShift) ? dashSpeed : walkSpeed) * friction;
+	}
 
 	// friction
 	acc += vel * -friction;

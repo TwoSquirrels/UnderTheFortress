@@ -1,5 +1,6 @@
 ﻿# pragma once
 
+# include "Entity/Player.hpp"
 # include "Game.hpp"
 # include "UtFInput.hpp"
 
@@ -29,12 +30,15 @@ class Field final : public UtFScenes::Scene
 public:
 	UtFInput input;
 	double stepSec;
+	int32 scale;
+	std::weak_ptr<Player> player;
 
 	explicit Field(const InitData& init);
 	void update() override;
 	void draw() const override;
 
 private:
+	Camera2D m_camera;
 	double m_accumulatorSec;
 };
 

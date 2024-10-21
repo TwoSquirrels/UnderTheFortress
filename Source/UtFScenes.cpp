@@ -35,12 +35,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // Field scene
 
-Field::Field(const InitData& init) : IScene(init), stepSec(1.0 / 60.0), m_accumulatorSec(0.0)
+Field::Field(const InitData& init)
+	: IScene(init), stepSec(1.0 / 60.0), scale(48), m_camera({0.0, 0.0}, scale, CameraControl::None_), m_accumulatorSec(0.0)
 {
 	if (getData().world) return;
 
 	getData().world = World{ U"fortress" };
-	getData().world->objects << make_shared<Player>();
+	getData().world->objects << make_shared<Player>(Vec3{ 0.0, 0.0, 1.0 }, true);
+	player = dynamic_pointer_cast<Player>(getData().world->objects.back());
 }
 
 void Field::update()
@@ -49,14 +51,26 @@ void Field::update()
 	for (m_accumulatorSec += Scene::DeltaTime(); m_accumulatorSec >= stepSec; m_accumulatorSec -= stepSec)	// NOLINT(cert-flp30-c)
 	{
 		getData().world->update(input);
+
+		m_camera.setTargetCenter(player.lock()->pos.xy());
+		m_camera.setTargetScale(scale);
 		input.reset();
 	}
+	m_camera.update();
+
+	// Round the camera position to prevent overlapping
+	const auto cameraPos = m_camera.getCenter();
+	m_camera.setCenter({ Round(cameraPos.x * scale) / scale, Round(cameraPos.y * scale) / scale });
 }
 
 void Field::draw() const
 {
-	const Transformer2D scaled{ Mat3x2::Scale(32), TransformCursor::Yes };
-	getData().world->draw(m_accumulatorSec / stepSec);
+	Rect{ Scene::Size() }.draw(Palette::Skyblue);
+	{
+		const auto transformed = m_camera.createTransformer();
+		getData().world->draw(m_accumulatorSec / stepSec);
+	}
+	m_camera.draw();
 }
 
 // Title scene
@@ -117,7 +131,7 @@ void Credit::draw() const
 
 // UtFObject
 
-void InitScenes(UtFScenes &scenes)
+void InitScenes(UtFScenes& scenes)
 {
 	scenes.add<Title>(U"title");
 	scenes.add<Field>(U"field");
