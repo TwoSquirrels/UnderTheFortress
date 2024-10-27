@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Field scene
 
 Field::Field(const InitData& init)
-	: IScene(init), stepSec(1.0 / 60.0), scale(48), m_camera({0.0, 0.0}, scale, CameraControl::None_), m_accumulatorSec(0.0)
+	: IScene(init), stepSec(1.0 / 60.0), scale(48), m_camera({ 0.0, 0.0 }, scale, CameraControl::None_), m_accumulatorSec(0.0)
 {
 	if (getData().world) return;
 
@@ -53,24 +53,26 @@ void Field::update()
 		getData().world->update(input);
 
 		m_camera.setTargetCenter(player.lock()->pos.xy());
-		m_camera.setTargetScale(scale);
 		input.reset();
 	}
 	m_camera.update();
-
-	// Round the camera position to prevent overlapping
-	const auto cameraPos = m_camera.getCenter();
-	m_camera.setCenter({ Round(cameraPos.x * scale) / scale, Round(cameraPos.y * scale) / scale });
 }
 
 void Field::draw() const
 {
 	Rect{ Scene::Size() }.draw(Palette::Skyblue);
 	{
-		const auto transformed = m_camera.createTransformer();
+		const auto roundedScale = Round(m_camera.getScale());
+		const auto offset = Graphics2D::GetRenderTargetSize() * 0.5 - m_camera.getCenter() * roundedScale;
+		const Transformer2D transformed{
+			Mat3x2::Scale(roundedScale).translated(Round(offset.x), Round(offset.y)),
+			TransformCursor::Yes,
+			Transformer2D::Target::PushCamera,
+		};
+
 		getData().world->draw(m_accumulatorSec / stepSec);
 	}
-	m_camera.draw();
+	m_camera.draw(Color::Zero());
 }
 
 // Title scene

@@ -39,6 +39,7 @@ class Tile final
 public:
 	static constexpr uint8 LayerCount = 5;
 	static constexpr uint32 TileImageSize = 96;
+	static constexpr double AnimationFps = 6.0;
 
 	TileType type;
 	bool isSolid;

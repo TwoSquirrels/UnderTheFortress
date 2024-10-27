@@ -9,5 +9,6 @@ void Assets::RegisterTexture(const AssetNameView name)
 
 void Assets::Register()
 {
+	RegisterTexture(U"tiles/energy.png");
 	RegisterTexture(U"tiles/glass.png");
 }

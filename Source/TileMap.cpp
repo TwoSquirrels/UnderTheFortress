@@ -88,31 +88,36 @@ void Tile::draw() const
 	if (type == TileType::Air) return;
 
 	constexpr int32 S = TileImageSize;
+	const int32 animationFrame = Floor(Scene::Time() * AnimationFps);
 
 	// TODO: preload textures
 	if (const TextureAsset texture{ U"tiles/{}.png"_fmt(ToId(type)) })
 	{
 		TextureRegion region;
+		
+		if (texture.width() == S)
+		{
+			const int32 h = S * animationFrame % texture.height();
 
-		if (texture.size() == Size{ S, S })
-		{
-			region = texture;
+			region = texture(0, h, S);
 		}
-		else if (texture.size() == Size{ S * 4, S * 4 })
+		else if (texture.width() == S * 4)
 		{
-			if (m_aroundBits == 0b11111111) region = texture(0, 0, S);
-			else if ((m_aroundBits & 0b01011111) == 0b00011111) region = texture(S * 0, S * 1, S);
-			else if ((m_aroundBits & 0b01111101) == 0b01111100) region = texture(S * 1, S * 1, S);
-			else if ((m_aroundBits & 0b11110101) == 0b11110001) region = texture(S * 2, S * 1, S);
-			else if ((m_aroundBits & 0b11010111) == 0b11000111) region = texture(S * 3, S * 1, S);
-			else if ((m_aroundBits & 0b01011101) == 0b00011100) region = texture(S * 0, S * 2, S);
-			else if ((m_aroundBits & 0b01110101) == 0b01110000) region = texture(S * 1, S * 2, S);
-			else if ((m_aroundBits & 0b11010101) == 0b11000001) region = texture(S * 2, S * 2, S);
-			else if ((m_aroundBits & 0b01010111) == 0b00000111) region = texture(S * 3, S * 2, S);
-			else if (m_aroundBits == 0b01111111) region = texture(S * 0, S * 3, S);
-			else if (m_aroundBits == 0b11111101) region = texture(S * 1, S * 3, S);
-			else if (m_aroundBits == 0b11110111) region = texture(S * 2, S * 3, S);
-			else if (m_aroundBits == 0b11011111) region = texture(S * 3, S * 3, S);
+			const int32 h = S * 4 * animationFrame % texture.height();
+
+			if (m_aroundBits == 0b11111111) region = texture(S * 0, h + S * 0, S);
+			else if ((m_aroundBits & 0b01011111) == 0b00011111) region = texture(S * 0, h + S * 1, S);
+			else if ((m_aroundBits & 0b01111101) == 0b01111100) region = texture(S * 1, h + S * 1, S);
+			else if ((m_aroundBits & 0b11110101) == 0b11110001) region = texture(S * 2, h + S * 1, S);
+			else if ((m_aroundBits & 0b11010111) == 0b11000111) region = texture(S * 3, h + S * 1, S);
+			else if ((m_aroundBits & 0b01011101) == 0b00011100) region = texture(S * 0, h + S * 2, S);
+			else if ((m_aroundBits & 0b01110101) == 0b01110000) region = texture(S * 1, h + S * 2, S);
+			else if ((m_aroundBits & 0b11010101) == 0b11000001) region = texture(S * 2, h + S * 2, S);
+			else if ((m_aroundBits & 0b01010111) == 0b00000111) region = texture(S * 3, h + S * 2, S);
+			else if (m_aroundBits == 0b01111111) region = texture(S * 0, h + S * 3, S);
+			else if (m_aroundBits == 0b11111101) region = texture(S * 1, h + S * 3, S);
+			else if (m_aroundBits == 0b11110111) region = texture(S * 2, h + S * 3, S);
+			else if (m_aroundBits == 0b11011111) region = texture(S * 3, h + S * 3, S);
 		}
 
 		if (region.texture)

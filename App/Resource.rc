@@ -130,6 +130,7 @@ Resource(engine/soundfont/GMGSx.sf2.zstdcmp)
 //
 //	Tiles
 //
+Resource(UnderTheFortress/tiles/energy.png)
 Resource(UnderTheFortress/tiles/glass.png)
 
 //

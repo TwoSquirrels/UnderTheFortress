@@ -30,7 +30,7 @@ class Field final : public UtFScenes::Scene
 public:
 	UtFInput input;
 	double stepSec;
-	int32 scale;
+	double scale;
 	std::weak_ptr<Player> player;
 
 	explicit Field(const InitData& init);
