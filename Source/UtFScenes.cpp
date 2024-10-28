@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // Field scene
 
 Field::Field(const InitData& init)
-	: IScene(init), stepSec(1.0 / 60.0), scale(48), m_camera({ 0.0, 0.0 }, scale, CameraControl::None_), m_accumulatorSec(0.0)
+	: IScene(init), stepSec(1.0 / 59.94), scale(48), m_camera({ 0.0, 0.0 }, scale, CameraControl::None_), m_accumulatorSec(0.0)
 {
 	if (getData().world) return;
 
@@ -63,9 +63,8 @@ void Field::draw() const
 	Rect{ Scene::Size() }.draw(Palette::Skyblue);
 	{
 		const auto roundedScale = Round(m_camera.getScale());
-		const auto offset = Graphics2D::GetRenderTargetSize() * 0.5 - m_camera.getCenter() * roundedScale;
 		const Transformer2D transformed{
-			Mat3x2::Scale(roundedScale).translated(Round(offset.x), Round(offset.y)),
+			Mat3x2::Scale(roundedScale).translated(Round(Graphics2D::GetRenderTargetSize() / 2 - m_camera.getCenter() * roundedScale)),
 			TransformCursor::Yes,
 			Transformer2D::Target::PushCamera,
 		};
