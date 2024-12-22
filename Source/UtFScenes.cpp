@@ -40,8 +40,8 @@ Field::Field(const InitData& init)
 {
 	if (getData().world) return;
 
-	getData().world = World{ U"fortress" };
-	getData().world->objects << make_shared<Player>(Vec3{ 0.0, 0.0, 1.0 }, true);
+	getData().world = make_shared<World>(U"fortress");
+	getData().world->objects << make_shared<Player>(getData().world, Vec3{ 0.0, 0.0, 1.0 }, true);
 	player = dynamic_pointer_cast<Player>(getData().world->objects.back());
 }
 

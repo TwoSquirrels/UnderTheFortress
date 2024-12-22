@@ -14,12 +14,14 @@ public:
 	double maxStamina; // TODO: implement stamina
 	bool operable;
 
-	explicit Player(const Vec3& pos = Vec3{ 0.0, 0.0, 1.0 }, bool operable = false, double maxStamina = 10.0);
+	explicit Player(
+		const std::weak_ptr<World>& world = {}, const Vec3& pos = Vec3{ 0.0, 0.0, 2.0 },
+		bool operable = false, double maxStamina = 10.0
+	);
 
 	[[nodiscard]] ObjectType type() const override;
-	[[nodiscard]] int32 getUpdatePriority() const override;
+	[[nodiscard]] double getUpdatePriority() const override;
 	void update(const UtFInput& input) override;
-	[[nodiscard]] int32 getDrawZ() const override;
 	void draw(double accumulatorStep) const override;
 
 	friend void Formatter(FormatData& formatData, const Player& value);

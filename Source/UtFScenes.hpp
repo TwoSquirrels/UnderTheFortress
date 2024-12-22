@@ -12,7 +12,7 @@ struct Shared final
 	static const String Version;
 	static const LicenseInfo License;
 
-	Optional<World> world;
+	std::shared_ptr<World> world;
 };
 
 using UtFScenes = SceneManager<String, Shared>;

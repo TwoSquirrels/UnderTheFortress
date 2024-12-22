@@ -144,7 +144,7 @@ void Formatter(FormatData& formatData, const Tile& value)
 // TileMap
 
 TileMap::TileMap(const Size size, const uint32 cellUpdateLimit)
-	: cellUpdateLimit(cellUpdateLimit), m_grid(size)
+	: cellUpdateLimit(cellUpdateLimit), layerHeight(2.0), m_grid(size)
 {
 	for (const auto y : step(size.y))
 	{
@@ -164,7 +164,7 @@ TileMap::TileMap(const Size size, const uint32 cellUpdateLimit)
 }
 
 TileMap::TileMap(const Size size, const JSON& worldMap, const uint32 cellUpdateLimit)
-	: cellUpdateLimit(cellUpdateLimit), m_grid(size)
+	: cellUpdateLimit(cellUpdateLimit), layerHeight(2.0), m_grid(size)
 {
 	for (const auto y : step(size.y))
 	{

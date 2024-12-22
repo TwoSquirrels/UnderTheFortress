@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Player::Player(const Vec3& pos, const bool operable, const double maxStamina)
-	: LivingEntity(pos, 3), walkSpeed(0.125), dashSpeed(0.25), friction(0.25),
+Player::Player(const std::weak_ptr<World>& world, const Vec3& pos, const bool operable, const double maxStamina)
+	: LivingEntity(world, pos, 3), walkSpeed(0.125), dashSpeed(0.25), friction(0.25),
 	stamina(maxStamina), maxStamina(maxStamina), operable(operable)
 {
 }
@@ -15,14 +15,14 @@ ObjectType Player::type() const
 	return ObjectType::Player;
 }
 
-int32 Player::getUpdatePriority() const
+double Player::getUpdatePriority() const
 {
-	return 0;
+	return 0.0;
 }
 
 void Player::update(const UtFInput& input)
 {
-	if (input.down(KeyF3)) DEBUG_PRINT(U"Player::update()");
+	DEBUG_PRINT_F3(U"Player::update()");
 
 	// input movement
 	if (operable)
@@ -33,26 +33,29 @@ void Player::update(const UtFInput& input)
 		if (input.pressed(KeyA | KeyLeft)) force.x -= 1;
 		if (input.pressed(KeyD | KeyRight)) force.x += 1;
 		acc += force.normalized() * (input.pressed(KeyShift) ? dashSpeed : walkSpeed) * friction;
+		if (input.down(KeySpace)) acc.z = 0.375;
 	}
 
-	// friction
-	acc += vel * -friction;
+	decelerate(Vec3{ friction, friction, 0.0 });
+	gravitate();
 
 	move();
 
-	if (input.down(KeyF3)) DEBUG_DUMP(*this);
-}
+	// temporary floor collision
+	if (pos.z < 2.0)
+	{
+		pos.z = 2.0;
+		vel.z = 0;
+	}
 
-int32 Player::getDrawZ() const
-{
-	return static_cast<int32>(pos.z);
+	DEBUG_DUMP_F3(*this);
 }
 
 void Player::draw(const double accumulatorStep) const
 {
 	DEBUG_PRINT_F3(U"Player::draw()");
 
-	Circle{ pos.xy() + vel.xy() * accumulatorStep * 0.75, 0.75 }.draw(Palette::Red);
+	Circle{ pos.xy() + vel.xy() * accumulatorStep * 0.75, 0.75 - pos.z / 24 }.draw(Palette::Red);
 }
 
 void Formatter(FormatData& formatData, const Player& value)

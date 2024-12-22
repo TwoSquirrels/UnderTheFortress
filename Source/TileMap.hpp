@@ -83,6 +83,7 @@ class TileMap
 {
 public:
 	uint32 cellUpdateLimit;
+	double layerHeight;
 
 	explicit TileMap(Size size = { 0, 0 }, uint32 cellUpdateLimit = 256);
 
