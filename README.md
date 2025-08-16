@@ -1,5 +1,9 @@
 # Under the Fortress
 
+> [!Caution]
+> traP 2025 年 1-Monthon で作り直すことにしたため、このリポジトリはアーカイブしました。  
+> 新リポジトリは [traP 内限定でアクセス可能](https://git.trap.jp/1-Monthon_25_15/UnderTheFortress) です。
+
 **© 2024 TwoSquirrels**  
 ライセンス: [MIT License](LICENSE)
 
